@@ -3319,6 +3319,18 @@ impl Connection {
                             self.send(msg_out).await;
                         }
                     }
+                    #[cfg(all(feature = "flutter", any(target_os = "android", target_os = "ios")))]
+                    Some(misc::Union::ToggleFlashCustom(t)) => {
+                        let data = json!({
+                            "name": "toggle_flash_custom",
+                            "on": t.on,
+                        })
+                        .to_string();
+                        let _ = crate::flutter::push_global_event(
+                            crate::flutter::APP_TYPE_MAIN,
+                            data,
+                        );
+                    }
                     _ => {}
                 },
                 Some(message::Union::AudioFrame(frame)) => {

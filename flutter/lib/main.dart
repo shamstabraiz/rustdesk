@@ -575,6 +575,15 @@ _registerEventHandler() {
       NativeUiHandler.instance.onEvent(evt);
     });
   }
+  // Remote flashlight toggle (RustDesk Misc → Flutter); Android / iOS controlled device.
+  if (isAndroid || isIOS) {
+    platformFFI.registerEventHandler(
+        'toggle_flash_custom', 'toggle_flash_custom', (evt) async {
+      final v = evt['on'];
+      final on = v == true || v == 'true';
+      await gFFI.invokeMethod('set_flashlight', {'on': on});
+    });
+  }
 }
 
 Widget keyListenerBuilder(BuildContext context, Widget? child) {
