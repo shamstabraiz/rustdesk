@@ -40,9 +40,6 @@ class PlatformFFI {
 
   static final PlatformFFI instance = PlatformFFI._();
   final _toAndroidChannel = const MethodChannel('mChannel');
-  /// iOS flashlight (BetterDesk — separate channel so general Android methods are not invoked on iOS).
-  static const MethodChannel _iosTorchChannel =
-      MethodChannel('com.carriez.flutter_hbb/torch');
 
   RustdeskImpl get ffiBind => _ffiBind;
   F3? _session_get_rgba;
@@ -280,17 +277,9 @@ class PlatformFFI {
     });
   }
 
-  Future<dynamic> invokeMethod(String method, [dynamic arguments]) async {
-    if (isAndroid) {
-      return await _toAndroidChannel.invokeMethod(method, arguments);
-    }
-    if (isIOS &&
-        (method == 'set_flashlight' ||
-            method == 'get_flashlight_state' ||
-            method == 'has_flashlight')) {
-      return await _iosTorchChannel.invokeMethod(method, arguments);
-    }
-    return false;
+  invokeMethod(String method, [dynamic arguments]) async {
+    if (!isAndroid) return Future<bool>(() => false);
+    return await _toAndroidChannel.invokeMethod(method, arguments);
   }
 
   void syncAndroidServiceAppDirConfigPath() {

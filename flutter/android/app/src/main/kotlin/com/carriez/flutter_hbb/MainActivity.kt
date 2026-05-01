@@ -20,8 +20,6 @@ import android.os.IBinder
 import android.util.Log
 import android.view.WindowManager
 import android.media.MediaCodecInfo
-import android.hardware.camera2.CameraCharacteristics
-import android.hardware.camera2.CameraManager
 import android.media.MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface
 import android.media.MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar
 import android.media.MediaCodecList
@@ -51,10 +49,6 @@ class MainActivity : FlutterActivity() {
 
     private var isAudioStart = false
     private val audioRecordHandle = AudioRecordHandle(this, { false }, { isAudioStart })
-
-    private var cameraManager: CameraManager? = null
-    private var flashCameraId: String? = null
-    private var isFlashlightOn = false
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -107,32 +101,6 @@ class MainActivity : FlutterActivity() {
         if (_rdClipboardManager == null) {
             _rdClipboardManager = RdClipboardManager(getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager)
             FFI.setClipboardManager(_rdClipboardManager!!)
-        }
-        initFlashlightSupport()
-    }
-
-    private fun initFlashlightSupport() {
-        try {
-            cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
-            flashCameraId = cameraManager?.cameraIdList?.firstOrNull { id ->
-                cameraManager?.getCameraCharacteristics(id)
-                    ?.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
-            }
-        } catch (e: Exception) {
-            Log.e(logTag, "initFlashlightSupport: ${e.message}")
-        }
-    }
-
-    private fun setFlashlightTorch(on: Boolean): Boolean {
-        val mgr = cameraManager ?: return false
-        val id = flashCameraId ?: return false
-        return try {
-            mgr.setTorchMode(id, on)
-            isFlashlightOn = on
-            true
-        } catch (e: Exception) {
-            Log.e(logTag, "setFlashlightTorch: ${e.message}")
-            false
         }
     }
 
@@ -304,16 +272,6 @@ class MainActivity : FlutterActivity() {
                 }
                 "on_voice_call_closed" -> {
                     onVoiceCallClosed()
-                }
-                "set_flashlight" -> {
-                    val on = call.argument<Boolean>("on") ?: false
-                    result.success(setFlashlightTorch(on))
-                }
-                "get_flashlight_state" -> {
-                    result.success(isFlashlightOn)
-                }
-                "has_flashlight" -> {
-                    result.success(flashCameraId != null)
                 }
                 else -> {
                     result.error("-1", "No such method", null)
