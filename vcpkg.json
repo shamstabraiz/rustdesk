@@ -8,10 +8,12 @@
       "name": "aom",
       "host": false
     },
+
     {
       "name": "cpu-features",
       "platform": "android"
     },
+
     {
       "name": "libjpeg-turbo",
       "host": true
@@ -20,10 +22,12 @@
       "name": "libjpeg-turbo",
       "host": false
     },
+
     {
       "name": "oboe",
       "platform": "android"
     },
+
     {
       "name": "opus",
       "host": true
@@ -32,6 +36,7 @@
       "name": "opus",
       "host": false
     },
+
     {
       "name": "libvpx",
       "host": true
@@ -40,6 +45,7 @@
       "name": "libvpx",
       "host": false
     },
+
     {
       "name": "libyuv",
       "host": true
@@ -48,41 +54,23 @@
       "name": "libyuv",
       "host": false
     },
+
     {
       "name": "mfx-dispatch",
       "host": true,
-      "platform": "((x86 | x64) & (android | linux)) | (windows & !uwp)"
+      "platform": "((x86 | x64) & (linux)) | (windows & !uwp)"
     },
     {
       "name": "mfx-dispatch",
       "host": false,
-      "platform": "((x86 | x64) & (android | linux)) | (windows & !uwp)"
+      "platform": "((x86 | x64) & (linux)) | (windows & !uwp)"
     },
+
     {
-      "name": "ffmpeg",
-      "host": true,
-      "features": [
-        {
-          "name": "amf",
-          "platform": "((windows | linux) & static)"
-        },
-        {
-          "name": "nvcodec",
-          "platform": "((windows | linux) & static)"
-        },
-        {
-          "name": "qsv",
-          "platform": "(windows & static)"
-        }
-      ],
-      "platform": "((windows | (linux & !arm32) | osx) & static)"
-    },
-    {
-      "name": "ffmpeg",
-      "host": false,
-      "platform": "((android | ios | (linux & arm32)) & static)"
+      "name": "ffmpeg"
     }
   ],
+
   "vcpkg-configuration": {
     "default-registry": {
       "kind": "builtin",
@@ -92,6 +80,7 @@
       "./res/vcpkg"
     ]
   },
+
   "overrides": [
     {
       "name": "ffnvcodec",
